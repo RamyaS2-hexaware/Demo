@@ -1,2 +1,49 @@
 thsi is a sample !
 modified the doc as per ur req
+
+
+@Test
+public final void testFindPendingEmpty(@Mocked final LeaveDAO ldao) {
+  new Expectations() {
+    {
+      ldao.findPendingLeave(1000); result = new ArrayList<LeaveDetails>();
+    }
+  };
+  new MockUp<LeaveDetails>() {
+    @Mock
+    LeaveDAO ldao() {
+      return ldao;
+    }
+  };
+  LeaveDetails[] ld = LeaveDetails.pendingLeave(1000);
+  assertEquals(0, ld.length);
+}
+
+@Test
+public final void testFindPending(@Mocked final LeaveDAO ldao) {
+  new Expectations() {
+    {
+      ArrayList<LeaveDetails> pl = new ArrayList<LeaveDetails>();
+      pl.add(new LeaveDetails(1));
+      pl.add(new LeaveDetails(2));
+      pl.add(new LeaveDetails(3));
+      ldao.findPendingLeave(150); result = pl;
+    }
+  };
+  new MockUp<LeaveDetails>() {
+    @Mock
+    LeaveDAO ldao() {
+      return ldao;
+    }
+  };
+  LeaveDetails[] pl = LeaveDetails.pendingLeave(150);
+  assertEquals(3, pl.length);
+  assertEquals(new LeaveDetails(1), pl[0]);
+  assertNotEquals(new LeaveDetails(1), pl[2]);
+  assertEquals(new LeaveDetails(2), pl[1]);
+  assertEquals(new LeaveDetails(3), pl[2]);
+  assertNotNull(pl[0]);
+
+
+
+}
