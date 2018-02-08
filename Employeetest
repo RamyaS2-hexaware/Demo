@@ -1,0 +1,32 @@
+ @Test
+  public final void testIsManager(@Mocked final EmployeeDAO dao) throws ParseException {
+    new Expectations() {
+      {
+        SimpleDateFormat ad = new SimpleDateFormat("yyyy/MM/dd");
+        ArrayList<Employee> emp = new ArrayList<Employee>();
+        ArrayList<Employee> emp1 = new ArrayList<Employee>();
+        emp.add(new Employee(100,"Sruthi","SruthiM@hexaware.com",913456789,ad.parse("2017/12/27"),300,"HEXAVARSITY",2));
+        emp.add(new Employee(200,"Harish","HarishR@hexaware.com",953458789,ad.parse("2017/12/27"),300,"HEXAVARSITY",4));
+        emp1.add(new Employee(101,"Harish","Hr@hexaware.com",989456789,ad.parse("2017/12/27"),301,"HEXAVARSITY",2));
+        dao.findManager(300); result = emp;
+        dao.findManager(301);result = emp1;
+      }
+    };
+      new MockUp<Employee>() {
+          @Mock
+          EmployeeDAO dao() {
+            return dao;
+          }
+      };
+      SimpleDateFormat apd = new SimpleDateFormat("yyyy/MM/dd");
+      Employee[] em = Employee.isManager(300);
+      Employee[] em1 = Employee.isManager(301);
+      assertNotEquals(em,null);
+      assertEquals(2, em.length);
+      assertEquals(1, em1.length);
+      assertEquals(new Employee(100,"Sruthi","SruthiM@hexaware.com",913456789,apd.parse("2017/12/27"),300,"HEXAVARSITY",2), em[0]);
+      assertEquals(new Employee(200,"Harish","HarishR@hexaware.com",953458789,apd.parse("2017/12/27"),300,"HEXAVARSITY",4),em[1]);
+      assertNotEquals(em[0], em[1]);
+      assertNotNull(em1[0]);
+
+   }
