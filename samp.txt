@@ -1,2 +1,31 @@
-thsi is a sample !
-modified the doc as per ur req
+@Test
+public final void testLeaveHistory(@Mocked final LeaveDAO ldao) throws ParseException {
+    final SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+    new Expectations() {
+        {
+        ArrayList<LeaveDetails> ld = new ArrayList<LeaveDetails>();
+        ld.add(new LeaveDetails(100, 5, sf.parse("2018-02-04"), sf.parse("2018-02-05"),
+                                    LeaveType.valueOf("EL"), LeaveStatus.valueOf("PENDING"), "Sick", sf.parse("2018-02-01")
+                                        , "", 1000));
+        ld.add(new LeaveDetails(101, 5, sf.parse("2018-02-04"), sf.parse("2018-02-05"),
+                    LeaveType.valueOf("EL"), LeaveStatus.valueOf("PENDING"), "Sick", sf.parse("2018-02-01")
+                        , "", 1000));
+
+        ldao.findLeaveHistory(1000); result = ld;
+    }
+};
+new MockUp<LeaveDetails>() {
+  @Mock
+  LeaveDAO ldao() {
+      return ldao;
+  }
+};
+LeaveDetails[] l = LeaveDetails.listById(1000);
+    assertEquals(2, l.length);
+    assertEquals(new LeaveDetails(100, 5, sf.parse("2018-02-04"), sf.parse("2018-02-05"),
+    LeaveType.valueOf("EL"), LeaveStatus.valueOf("PENDING"), "Sick", sf.parse("2018-02-01")
+        , "", 1000),l[0]);
+    assertEquals(new LeaveDetails(101, 5, sf.parse("2018-02-04"), sf.parse("2018-02-05"),
+    LeaveType.valueOf("EL"), LeaveStatus.valueOf("PENDING"), "Sick", sf.parse("2018-02-01")
+        , "", 1000),l[1]);
+}
